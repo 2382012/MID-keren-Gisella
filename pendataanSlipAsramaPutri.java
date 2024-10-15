@@ -70,32 +70,7 @@ public class pendataanSlipAsramaPutri {
     }
 
     public static void pengajuanSlip(){
-        System.out.println("\nPENGAJUAN SLIP");
-        if (daftarMahasiswi.isEmpty()) {
-            System.out.println("Belum derdaftar. Silahkan daftar terlebih dahulu.");
-            return;
-        }
-
-        System.out.println("Daftar Mahasiswi:");
-        for (int i = 0; i < daftarMahasiswi.size(); i++) {
-            System.out.println((i+1) + ". " + daftarMahasiswi.get(i).nama);
-        }
-
-        int pilihan = Integer.parseInt(input("Pilih nomor siswa")) - 1;
-        if (pilihan < 0 || pilihan >= daftarMahasiswi.size()) {
-            System.out.println("Pilihan tidak valid.");
-            return;
-        }
-
-        Mahasiswi mahasiswi = daftarMahasiswi.get(pilihan);
-        String jenisSlip = ("Jenis slip (Keluar/Weekend)");
-        String alasan = ("Alasan");
-        String tanggalKeluar = ("Tanggal Keluar (dd-mm-yyyy)");
-        String waktuKeluar = ("Waktu Keluar (hh:mm)");
-
-        Slip slip = new Slip (mahasiswi, jenisSlip, alasan, tanggalKeluar, waktuKeluar);
-        daftarSlip.add(slip);
-        System.out.println("Slip berhasil diajukan dan menunggu persetujuan.");
+        //punya karen
     }
 
     public static void persetujuanPembimbingAsrama() {
