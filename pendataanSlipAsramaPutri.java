@@ -1,12 +1,16 @@
 import java.util.Scanner;
 import java.util.ArrayList;
+import java.util.Date;
 import java.text.SimpleDateFormat;
+import java.text.ParseException;
 
 public class pendataanSlipAsramaPutri {
     public static ArrayList<Mahasiswi> daftarMahasiswi = new ArrayList<>();
     public static ArrayList<Slip> daftarSlip = new ArrayList<>();
-    public static Scanner scanner = new Scanner (System.in);
-    public static SimpleDateFormat dateFormat = new SimpleDateFormat("dd-mm-yyyy hh:mm");
+    public static Scanner scanner = new Scanner(System.in);
+    public static SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+    public static SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
+    public static SimpleDateFormat dateTimeFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm");
 
     public static void main(String[] args) {
         showMainMenu();
@@ -14,7 +18,7 @@ public class pendataanSlipAsramaPutri {
 
     public static void showMainMenu() {
         boolean isRunning = true;
-        while (!isRunning) {
+        while (isRunning) {
             System.out.println("\nSISTEM PENDATAAN SLIP ASRAMA PUTRI");
             System.out.println("1. Pendaftaran Akun");
             System.out.println("2. Pengajuan Slip");
@@ -25,22 +29,22 @@ public class pendataanSlipAsramaPutri {
             System.out.println("7. Pencarian dan Filter Slip");
             System.out.println("8. Keluar");
 
-            String pilihan = ("Pilih menu");
+            String pilihan = input("Pilih menu");
             switch (pilihan) {
                 case "1":
-                    pendaftaranAkunSiswa();
+                    pendaftaranAkunMahasiswi();
                     break;
                 case "2":
                     pengajuanSlip();
                     break;
                 case "3":
-                    persetujuanPembimbingAsrama();
+                    persetujuanPengurusAsrama();
                     break;
                 case "4":
                     notifikasiStatusPengajuan();
                     break;
                 case "5":
-                    pencatatanWaktuKeluarMasuk();
+                    pencatatanWaktuKembali();
                     break;
                 case "6":
                     dashboardStatistik();
@@ -58,76 +62,81 @@ public class pendataanSlipAsramaPutri {
         }
     }
 
-    public static void pendaftaranAkunSiswa() {
+    public static void pendaftaranAkunMahasiswi() { // Gisella
         System.out.println("\nPENDAFTARAN AKUN");
-        String nama = ("Nama Lengkap");
-        String asrama = ("Asrama");
-        String noKamar = ("No. Kamar");
+        String nama = input("Nama lengkap");
+        String asrama = input("Asrama");
+        String nomorKamar = input("Nomor kamar");
 
-        Mahasiswi mahasiswi = new Mahasiswi(nama, asrama, noKamar);
+        Mahasiswi mahasiswi = new Mahasiswi(nama, asrama, nomorKamar);
         daftarMahasiswi.add(mahasiswi);
-        System.out.println("Akun berhasil didaftarkan");
+        System.out.println("Akun mahasiswi berhasil didaftarkan!");
     }
 
-    public static void pengajuanSlip(){
-        //punya karen
+    public static void pengajuanSlip() { // Karenina
+
     }
 
-    public static void persetujuanPembimbingAsrama() {
-        System.out.println("/nPERSETUJUAN PEMBIMBING ASRAMA");
+    public static void persetujuanPengurusAsrama() { // Gisella
+        System.out.println("\nPERSETUJUAN PEMBIMBING ASRAMA");
         if (daftarSlip.isEmpty()) {
             System.out.println("Tidak ada slip yang perlu disetujui.");
             return;
         }
 
-        System.out.println("Daftar slip yang menunggu persetujuan: ");
+        System.out.println("Daftar Slip yang Menunggu Persetujuan:");
         for (int i = 0; i < daftarSlip.size(); i++) {
             Slip slip = daftarSlip.get(i);
-            if(!slip.statusPersetujuan) {
-                System.out.println((i+1) + ". " + slip.mahasiswi.nama + "-" + slip.jenisSlip + "-" + slip.alasan);
+            if (!slip.statusPersetujuan) {
+                System.out.println((i+1) + ". " + slip.mahasiswi.nama + " - " + slip.jenisSlip + " - " + slip.alasan);
             }
         }
 
-        int pilihan = Integer.parseInt("Pilih nomor slip untuk disetujui") - 1;
-        if (pilihan < 0 || pilihan >= daftarSlip.size()) {
-            System.out.println("Pilihan tidak valid.");
-            return;
-        }
-
-        Slip slip = daftarSlip. get(pilihan);
-        slip.statusPersetujuan = true;
-        System.out.println("Slip telah disetujui");
-    }
-
-    public static void notifikasiStatusPengajuan() {
-        // karen punya
-    }
-
-    public static void pencatatanWaktuKeluarMasuk() {
-        System.out.println("\nPENCATATAN WAKTU KEMBALI");
-        System.out.println("Daftar slip yang disetuji: ");
-        for (int i = 0; i < daftarSlip.size(); i++){
-            Slip slip = daftarSlip.get(i);
-            if (slip.statusPersetujuan && slip.waktuKembali == null) {
-                System.out.println((i+1) + ". " + slip.mahasiswi.nama + "-" + slip.jenisSlip);
-            }
-        }
-
-        int pilihan = Integer.parseInt("Pilih nomor slip untuk mencatat waktu kembali") - 1;
+        int pilihan = Integer.parseInt(input("Pilih nomor slip untuk disetujui")) - 1;
         if (pilihan < 0 || pilihan >= daftarSlip.size()) {
             System.out.println("Pilihan tidak valid.");
             return;
         }
 
         Slip slip = daftarSlip.get(pilihan);
-        String tanggalKembali = ("Tanggal kembali (dd-mm-yyyy");
-        String waktuKembali = ("Waktu kembali (hh:mm)");
-        slip.waktuKembali = tanggalKembali + " " + waktuKembali;
-        System.out.println("Waktu kembali berhasil dicatat. ");
+        slip.statusPersetujuan = true;
+        System.out.println("Slip telah disetujui.");
+    }
+
+    public static void notifikasiStatusPengajuan() {
+        System.out.println("\nNOTIFIKASI STATUS PENGAJUAN");
+        for (Slip slip : daftarSlip) {
+            System.out.println(slip.mahasiswi.nama + " - " + slip.jenisSlip + ": " +
+                    (slip.statusPersetujuan ? "Disetujui" : "Menunggu Persetujuan"));
+        }
+    }
+
+    public static void pencatatanWaktuKembali() {
+        System.out.println("\nPENCATATAN WAKTU KELUAR-MASUK");
+        System.out.println("Daftar Slip yang Disetujui:");
+        for (int i = 0; i < daftarSlip.size(); i++) {
+            Slip slip = daftarSlip.get(i);
+            if (slip.statusPersetujuan && slip.waktuKembali == null) {
+                System.out.println((i+1) + ". " + slip.mahasiswi.nama + " - " + slip.jenisSlip);
+            }
+        }
+
+        int pilihan = Integer.parseInt(input("Pilih nomor slip untuk mencatat waktu kembali")) - 1;
+        if (pilihan < 0 || pilihan >= daftarSlip.size()) {
+            System.out.println("Pilihan tidak valid.");
+            return;
+        }
+
+        Slip slip = daftarSlip.get(pilihan);
+        String tanggalKembali = input("Tanggal kembali (dd-MM-yyyy)");
+        String waktuKembali = input("Waktu kembali (HH:mm)");
+        String tanggalWaktuKembali = tanggalKembali + " " + waktuKembali;
+        slip.waktuKembali = tanggalWaktuKembali;
+        System.out.println("Waktu kembali berhasil dicatat.");
     }
 
     public static void dashboardStatistik() {
-        //punya karen
+
     }
 
     public static void pencarianDanFilterSlip() {
@@ -182,8 +191,11 @@ public class pendataanSlipAsramaPutri {
         System.out.println("Nama: " + slip.mahasiswi.nama);
         System.out.println("Jenis Slip: " + slip.jenisSlip);
         System.out.println("Alasan: " + slip.alasan);
-        System.out.println("Tanggal Keluar: " + slip.tanggalKeluar);
+        System.out.println("Tanggal dan Waktu Keluar: " + slip.tanggalKeluar);
         System.out.println("Status: " + (slip.statusPersetujuan ? "Disetujui" : "Menunggu Persetujuan"));
+        if (slip.waktuKembali != null) {
+            System.out.println("Tanggal dan Waktu Kembali: " + slip.waktuKembali);
+        }
         System.out.println("--------------------");
     }
 
@@ -213,7 +225,7 @@ class Slip {
     String waktuKembali;
     boolean statusPersetujuan;
 
-    public Slip(Mahasiswi mahasiswi, String jenisSlip, String alasan, String tanggalKeluar, String waktuKeluar) {
+    public Slip(Mahasiswi mahasiswi, String jenisSlip, String alasan, String tanggalKeluar) {
         this.mahasiswi = mahasiswi;
         this.jenisSlip = jenisSlip;
         this.alasan = alasan;
@@ -221,4 +233,3 @@ class Slip {
         this.statusPersetujuan = false;
     }
 }
-
